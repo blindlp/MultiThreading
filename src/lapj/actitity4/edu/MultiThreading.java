@@ -74,25 +74,42 @@ final class MovieTicketsStock {
     }
 
     public String toString() {
-
-
-
-
+        /**
+         * Displaying the information about the location of the movies
+         */
         StringBuilder stringBuilder = new StringBuilder();
-        movies.forEach((k,v) -> {
+        stringBuilder.append("\t\t\t\tMovie Theater\n");
+        stringBuilder.append("------------------------------------------------------------\n");
 
-                Map<String, Integer> collect =  position.entrySet()
-                        .parallelStream()
-                        .filter(e -> e.getKey() == k)
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        position.entrySet().stream()
+                .sorted(Map.Entry.<String,Integer>comparingByValue())
+                .forEachOrdered(x-> {
 
-                collect.forEach((x,y) -> {
-                    stringBuilder.append("No " + y + "\t" );
+                    switch (x.getValue()) {
+
+                        case 1:
+                            stringBuilder.append("Queue No 1\n" );
+                            break;
+                        case 4:
+                            stringBuilder.append("Queue No 2\n" );
+                            break;
+                        case 7:
+                            stringBuilder.append("Queue No 3\n" );
+                            break;
+                        case 10:
+                            stringBuilder.append("Queue No 4\n" );
+                            break;
+                        case 13:
+                            stringBuilder.append("Queue No 5\n" );
+                            break;
+
+                    }
+
+                    stringBuilder.append("\t" + x.getKey() + " \n");
+                    if (x.getValue() % 3 == 0) {
+                        stringBuilder.append("\n");
+                    }
                 });
-
-
-                stringBuilder.append( k + " Tickets Avaible : " + v + "\n");
-        });
         return stringBuilder.toString();
     }
 }
@@ -100,12 +117,17 @@ final class MovieTicketsStock {
 
 class Customer {
 
-    public Customer(){
+    public int id;
+    public String wichMovie;
 
+    public Customer(int id, String wichMovie) {
+        this.id = id;
+        this.wichMovie = wichMovie;
     }
 
+
     public String toString(){
-        return "";
+        return "Customer #" + this.id;
     }
 }
 
@@ -116,16 +138,57 @@ final class MovieQueues {
     private static LinkedList<Customer> movieQueue4 = new LinkedList<Customer>();
     private static LinkedList<Customer> movieQueue5 = new LinkedList<Customer>();
 
-    public static void enterCustomer() {
+    public static void enterCustomer(int queue,Customer customer) {
+        switch (queue) {
+            case 1:
+                movieQueue1.add(customer);
+                break;
+            case 2:
+                movieQueue2.add(customer);
+                break;
+            case 3:
+                movieQueue3.add(customer);
+                break;
+            case 4:
+                movieQueue4.add(customer);
+                break;
+            case 5:
+                movieQueue5.add(customer);
+                break;
+        }
 
     }
 
-    public static Customer attendCustomer() {
-        return null;
+    public static Customer attendCustomer(int queue) {
+        /**
+         * removin customer from the queue line
+         */
+        switch (queue) {
+            case 1:
+                return movieQueue1.removeFirst();
+            case 2:
+                return movieQueue2.removeFirst();
+            case 3:
+                return movieQueue3.removeFirst();
+            case 4:
+                return movieQueue4.removeFirst();
+            case 5:
+                return movieQueue5.removeFirst();
+                default:
+                    return null;
+        }
     }
 
     public String toString(){
-        return  "";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("\tQueue 1 :" + movieQueue1);
+        stringBuilder.append("\n\tQueue 2 :" + movieQueue2);
+        stringBuilder.append("\n\tQueue 3 :" + movieQueue3);
+        stringBuilder.append("\n\tQueue 4 :" + movieQueue4);
+        stringBuilder.append("\n\tQueue 5 :" + movieQueue5);
+
+        return  stringBuilder.toString();
     }
 }
 
